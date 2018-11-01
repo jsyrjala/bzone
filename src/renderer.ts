@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import {gamepadState, AXES} from './gamepad';
 
 const B = BABYLON
 
@@ -59,15 +60,26 @@ export default class Renderer {
 
     loop() {
         this.counter ++
+        const state = gamepadState();
+        if (state) {
+            const ly = gamepadState().axes[AXES.LEFT_Y]
+            const lx = gamepadState().axes[AXES.LEFT_X]
 
-        this.camera.position.x=Math.sin(this.counter/10.0)
-        this.camera.position.z=Math.sin(this.counter/23.0 + 8) - 10
+            const ry = gamepadState().axes[AXES.RIGHT_Y]
+            const rx = gamepadState().axes[AXES.RIGHT_X]
 
+            this.camera.position.x += lx / 10
+            this.camera.position.z += -ly / 10
+
+            this.camera.rotation.y += rx / 100
+            this.camera.rotation.x += ry / 100
+        }
     }
 
     initialize(canvas: HTMLCanvasElement) {
-        window.HOT_SWAP_COUNTER= window.HOT_SWAP_COUNTER+1 || 0
-        console.info('start', window.HOT_SWAP_COUNTER)
+        const w: any = window
+        w.HOT_SWAP_COUNTER = w.HOT_SWAP_COUNTER+1 || 0
+        console.info('Hot swap counter', w.HOT_SWAP_COUNTER)
         const engine = new BABYLON.Engine(canvas, true);
         this.createScene(canvas, engine);
 

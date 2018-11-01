@@ -1,12 +1,14 @@
 import * as _ from 'lodash'
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API
-const getState = (gp: Gamepad) => {
+const readState = (gp: Gamepad) => {
     return {
         buttons: gp.buttons.map(button => button.pressed),
         axes: _.clone(gp.axes),
     }
 }
+
+let STATE: any
 
 const gamePadFound = (gp: Gamepad) => {
     console.info("Gamepad connected at index %d: %s. %d buttons, %d axes.",
@@ -15,7 +17,8 @@ const gamePadFound = (gp: Gamepad) => {
     const buttonsElem: any = document.querySelector('#buttons')
     const axesElem: any = document.querySelector('#axes')
     function showGamepad() {
-        const state = getState(gp)
+        const state = readState(gp)
+        STATE = state
         buttonsElem.innerHTML = 'Buttons: ' + state.buttons.map((button, index) => {
             return index + ': ' + button
         }).join(', ')
@@ -29,6 +32,7 @@ const gamePadFound = (gp: Gamepad) => {
     requestAnimationFrame(showGamepad)
 }
 
+export const gamepadState = () => STATE
 
 const pollGamePad = (callback: Function) => {
     let interval: any = undefined
@@ -48,4 +52,11 @@ const pollGamePad = (callback: Function) => {
 
 export const initGamePad = () => {
     pollGamePad(gamePadFound)
+}
+
+export const AXES = {
+    LEFT_Y: 1,
+    LEFT_X: 0,
+    RIGHT_Y: 2,
+    RIGHT_X: 5
 }
