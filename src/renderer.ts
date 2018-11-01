@@ -9,6 +9,9 @@ export default class Renderer {
     private _scene?: BABYLON.Scene;
     private counter = 1
     private camera: BABYLON.UniversalCamera
+    private positionElem = document.querySelector('#position')
+    private rotationElem = document.querySelector('#rotation')
+
     createScene(canvas: HTMLCanvasElement, engine: BABYLON.Engine) {
         this._canvas = canvas;
 
@@ -35,7 +38,7 @@ export default class Renderer {
         light.intensity = 0.7;
 
 
-        var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
+        const myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
 
         myMaterial.diffuseColor = new BABYLON.Color3(1, 0, 1);
         myMaterial.specularColor = new BABYLON.Color3(0.5, 0.6, 0.87);
@@ -51,9 +54,6 @@ export default class Renderer {
         barrel.translate(new B.Vector3(0,0,-1), 2)
         // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
         const ground = BABYLON.Mesh.CreateGround("ground1", 16, 16, 22, scene);
-
-
-
 
         console.log(ground, this._canvas, this._engine)
     }
@@ -71,8 +71,18 @@ export default class Renderer {
             this.camera.position.x += lx / 10
             this.camera.position.z += -ly / 10
 
-            this.camera.rotation.y += rx / 100
+            this.camera.rotation.y +=  rx / 100
             this.camera.rotation.x += ry / 100
+
+            this.positionElem.innerHTML = '' +
+                'x: ' + this.camera.position.x.toFixed(2) +
+                ', y: ' + this.camera.position.y.toFixed(2) +
+                ', z: ' + this.camera.position.z.toFixed(2)
+
+            this.rotationElem.innerHTML = '' +
+                'x: ' + this.camera.rotation.x.toFixed(2) +
+                ', y: ' + this.camera.rotation.y.toFixed(2) +
+                ', z: ' + this.camera.rotation.z.toFixed(2)
         }
     }
 
@@ -88,7 +98,7 @@ export default class Renderer {
             this._scene.render();
         });
 
-        window.addEventListener('resize', function () {
+        window.addEventListener('resize', () => {
             engine.resize();
         });
     }

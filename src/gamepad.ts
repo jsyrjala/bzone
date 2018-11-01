@@ -1,10 +1,11 @@
 import * as _ from 'lodash'
+import {minValue} from "./util";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API
 const readState = (gp: Gamepad) => {
     return {
         buttons: gp.buttons.map(button => button.pressed),
-        axes: _.clone(gp.axes),
+        axes: gp.axes.map(axe => minValue(axe, 0.01)),
     }
 }
 
