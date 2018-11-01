@@ -2,8 +2,20 @@
   "name": "bzone",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "author": "Juha Syrjälä",
+  "devDependencies": {
+    "babel-preset-env": "1.7.0",
+    "babel-preset-react": "6.24.1"
   },
-  "author": "Juha Syrjälä"
+  "dependencies": {
+    "babel-core": "6.26.3",
+    "babylonjs": "3.2.0",
+    "node-sass": "4.9.0",
+    "parcel-bundler": "1.9.7",
+    "typescript": "2.9.2"
+  },
+  "scripts": {
+    "start": "parcel index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }
