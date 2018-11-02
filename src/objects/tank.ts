@@ -27,7 +27,7 @@ const createBody = (scene: Scene, material: Material) => {
 }
 
 const createBarrel = (scene: Scene, material: Material) => {
-    const barrel = BABYLON.Mesh.CreateCylinder('barrel', 0.5, 0.2, 0.2,
+    const barrel = BABYLON.Mesh.CreateCylinder('barrel', 0.65, 0.2, 0.2,
         12, 2, scene)
     barrel.material = material
     barrel.position.x = -0.4
@@ -37,7 +37,7 @@ const createBarrel = (scene: Scene, material: Material) => {
 }
 
 const createTower = (scene: Scene, material: Material) => {
-    const barrel = BABYLON.Mesh.CreateCylinder('tower', 2, 1, 1,
+    const barrel = BABYLON.Mesh.CreateCylinder('tower', 2, 0.8, 1,
         12, 4, scene)
     barrel.material = material
     barrel.position.x = 0.3
@@ -45,7 +45,7 @@ const createTower = (scene: Scene, material: Material) => {
 }
 
 export const createTank = (name: string, scene: Scene, position: Vector3, color: Color3) => {
-    const tankMaterial = new BABYLON.StandardMaterial('tankMaterial', scene);
+    const tankMaterial = new BABYLON.StandardMaterial(name + 'tankMaterial', scene);
     tankMaterial.diffuseColor = color
     tankMaterial.ambientColor = color
 
