@@ -1,5 +1,22 @@
 # bzone
 
+Inspiration: https://my.ign.com/atari/battlezone
+
+# Quick start
+
+```
+yarn install
+yarn start
+```
+Point your browser to http://localhost:1234 
+
+or for npm users:
+
+```
+npm install
+npm start
+```
+
 ## Vendors
 
 https://www.babylonjs.com/versionbuilder/
