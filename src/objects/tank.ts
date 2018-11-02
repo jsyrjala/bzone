@@ -13,7 +13,7 @@ const B = BABYLON
 const createBody = (scene: Scene, material: Material) => {
     const body = BABYLON.MeshBuilder.CreateBox("body", {height: 0.4, width: 2.2, depth: 1.1}, scene)
     body.material = material
-    body.position.y = 0.3
+    body.position.y = 0.4
 
     const trackMaterial = new BABYLON.StandardMaterial('tracksMaterial', scene);
     trackMaterial.diffuseColor = new B.Color3(0,0,0)
@@ -21,8 +21,10 @@ const createBody = (scene: Scene, material: Material) => {
 
     const tracks = BABYLON.MeshBuilder.CreateBox("tracks", {height: 0.5, width: 2, depth: 1}, scene)
     tracks.material = trackMaterial
-    tracks.position.y = 0
+    tracks.position.y = -0.2
 
+    tracks.parent = body
+    return body
     return BABYLON.Mesh.MergeMeshes([body, tracks]);
 }
 
@@ -30,17 +32,18 @@ const createBarrel = (scene: Scene, material: Material) => {
     const barrel = BABYLON.Mesh.CreateCylinder('barrel', 0.65, 0.2, 0.2,
         12, 2, scene)
     barrel.material = material
-    barrel.position.x = -0.4
+    barrel.position.x = -0.7
     barrel.position.y = 0.8
     barrel.rotation.z = -3.14/2
     return barrel
 }
 
-const createTower = (scene: Scene, material: Material) => {
+const createTurret = (scene: Scene, material: Material) => {
     const barrel = BABYLON.Mesh.CreateCylinder('tower', 2, 0.8, 1,
         12, 4, scene)
     barrel.material = material
     barrel.position.x = 0.3
+    barrel.position.y = -0.3
     return barrel
 }
 
@@ -49,15 +52,21 @@ export const createTank = (name: string, scene: Scene, position: Vector3, color:
     tankMaterial.diffuseColor = color
     tankMaterial.ambientColor = color
 
-    const tower = createTower(scene, tankMaterial)
+    const turret = createTurret(scene, tankMaterial)
 
     const body = createBody(scene, tankMaterial)
 
     const barrel = createBarrel(scene, tankMaterial)
 
-    const merged = BABYLON.Mesh.MergeMeshes([body, tower, barrel]);
-    merged.position = position
+    //const merged = BABYLON.Mesh.MergeMeshes([body, turret, barrel]);
+    body.position.z = position.z
+    body.position.x = position.x
 
+    barrel.parent = turret
+    turret.parent = body
 
-    return merged
+    return {
+        body: body,
+        turret: turret
+    }
 }

@@ -49,7 +49,7 @@ export default class Renderer {
         const pos2 = new B.Vector3(2, 0 , 0)
         const tankColor2 = new BABYLON.Color3(0, 1, 1);
         const tank2 = createTank('t2', scene, pos2, tankColor2)
-        tank2.rotation.y = -2
+        tank2.body.rotation.y = -2
 
         this.tanks.push(tank2)
 
@@ -59,14 +59,13 @@ export default class Renderer {
         console.log(ground, this._canvas, this._engine)
     }
 
-    loop() {
-        this.counter ++
+
+    gamepadControl(tank: any) {
         const state = gamepadState();
         if (!state) {
             return
         }
 
-        const tank = this.tanks[0]
 
         // Adding stuff on button press
         if (state.buttons[0] && this.objs.length == 0){
@@ -93,15 +92,27 @@ export default class Renderer {
         // tank.position.x += lx / 10
         // tank.position.z += -ly / 10
 
+        // control tank
 
+        // TODO control turret with other stick
 
-        tank.rotation.y +=  lx / 25
+        tank.body.rotation.y += lx / 40
 
-        tank.position.x += ly / 10 * Math.cos(tank.rotation.y)
-        tank.position.z += -ly / 10 * Math.sin(tank.rotation.y)
+        let speed = ly
 
-        // tank.rotation.x += ry / 25
+        // reversing is slower
+        if (speed > 0) {
+            speed /= 2
+        }
 
+        tank.body.position.x += speed / 10 * Math.cos(tank.body.rotation.y)
+        tank.body.position.z += -speed / 10 * Math.sin(tank.body.rotation.y)
+
+        // rotate turret
+        tank.turret.rotation.y += rx / 20
+    }
+
+    showCameraInfo() {
         this.positionElem.innerHTML = '' +
             'x: ' + this.camera.position.x.toFixed(2) +
             ', y: ' + this.camera.position.y.toFixed(2) +
@@ -111,6 +122,14 @@ export default class Renderer {
             'x: ' + this.camera.rotation.x.toFixed(2) +
             ', y: ' + this.camera.rotation.y.toFixed(2) +
             ', z: ' + this.camera.rotation.z.toFixed(2)
+    }
+    loop() {
+        this.counter ++
+        const tank = this.tanks[0]
+
+        this.gamepadControl(tank)
+
+        this.showCameraInfo()
     }
 
     initialize(canvas: HTMLCanvasElement) {
