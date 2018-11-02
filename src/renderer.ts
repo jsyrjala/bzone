@@ -33,7 +33,8 @@ export default class Renderer {
         // This targets the camera to scene origin
         // camera.setTarget(BABYLON.Vector3.Zero());
 
-        camera.position = new B.Vector3(0,3,-20)
+        camera.position = new B.Vector3(0,5,-17)
+        camera.rotation.x = 0.2
 
         // This attaches the camera to the canvas
         camera.attachControl(canvas, true);
