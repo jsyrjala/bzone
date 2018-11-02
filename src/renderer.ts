@@ -3,6 +3,7 @@ import {gamepadState, AXES, initGamePad} from './gamepad';
 import {createTank} from './objects/tank';
 import {createProjectile} from './objects/projectile';
 import _ from 'lodash'
+import {initKeyboard} from "./keyboard";
 
 const B = BABYLON
 
@@ -28,6 +29,8 @@ export default class Renderer {
         const scene = new BABYLON.Scene(engine);
         // needs babylonjs.worker.js lib
         // scene.workerCollisions = true
+
+        // scene.debugLayer.show();
 
         this._scene = scene;
         // This creates and positions a free camera (non-mesh)
@@ -196,6 +199,7 @@ export default class Renderer {
         });
 
         initGamePad(this.tanks[0])
+        initKeyboard(this.tanks)
 
         window.addEventListener('resize', () => {
             engine.resize();
