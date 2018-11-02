@@ -46,6 +46,7 @@ export default class Renderer {
         const pos2 = new B.Vector3(2, 0 , 0)
         const tankColor2 = new BABYLON.Color3(0, 1, 1);
         const tank2 = createTank('t2', scene, pos2, tankColor2)
+        tank2.rotation.y = -2
 
         // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
         const ground = BABYLON.Mesh.CreateGround("ground1", 16, 16, 22, scene);

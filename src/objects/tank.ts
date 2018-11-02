@@ -7,11 +7,23 @@ import Vector3 = BABYLON.Vector3;
 
 const B = BABYLON
 
+// TODO do grouping with parent relation ship.
+// Now there is a single mesh that can have only one material
 
 const createBody = (scene: Scene, material: Material) => {
-    const body = BABYLON.MeshBuilder.CreateBox("box", {height: 1, width: 2, depth: 1}, scene)
+    const body = BABYLON.MeshBuilder.CreateBox("body", {height: 0.4, width: 2.2, depth: 1.1}, scene)
     body.material = material
-    return body
+    body.position.y = 0.3
+
+    const trackMaterial = new BABYLON.StandardMaterial('tracksMaterial', scene);
+    trackMaterial.diffuseColor = new B.Color3(0,0,0)
+    trackMaterial.ambientColor = new B.Color3(0,0,0)
+
+    const tracks = BABYLON.MeshBuilder.CreateBox("tracks", {height: 0.5, width: 2, depth: 1}, scene)
+    tracks.material = trackMaterial
+    tracks.position.y = 0
+
+    return BABYLON.Mesh.MergeMeshes([body, tracks]);
 }
 
 const createBarrel = (scene: Scene, material: Material) => {
@@ -45,5 +57,7 @@ export const createTank = (name: string, scene: Scene, position: Vector3, color:
 
     const merged = BABYLON.Mesh.MergeMeshes([body, tower, barrel]);
     merged.position = position
+
+
     return merged
 }
