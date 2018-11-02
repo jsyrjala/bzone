@@ -58,6 +58,10 @@ export default class Renderer {
 
         // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
         const ground = BABYLON.Mesh.CreateGround("ground1", 16, 16, 22, scene);
+        const grass0 = new BABYLON.StandardMaterial("grass0", scene);
+        grass0.diffuseTexture = new BABYLON.Texture("assets/texture1.png", scene);
+        ground.material = grass0
+
         console.log(ground, this._canvas, this._engine)
     }
 
