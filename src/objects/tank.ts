@@ -66,8 +66,10 @@ export const createTank = (name: string, scene: Scene, position: Vector3, color:
 
     let lastShot: any = null
     return {
+        name: name,
         body: body,
         turret: turret,
+        barrel: barrel,
         color: color,
         projectiles: [],
         canShoot: () => {

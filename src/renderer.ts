@@ -63,9 +63,9 @@ export default class Renderer {
         grass0.diffuseTexture = new BABYLON.Texture("assets/texture1.png", scene);
         ground.material = grass0
 
+        // sounds
         this.shootingSound = new BABYLON.Sound("50_cal", "assets/50_cal.wav", scene);
         this.ricochetSound = new BABYLON.Sound("ricochet", "assets/ricochet.wav", scene);
-        console.log(ground, this._canvas, this._engine)
     }
 
 
@@ -125,22 +125,43 @@ export default class Renderer {
 
 
     moveProjectiles(tank: any, tanks: any[]) {
+        // move bullets
         tank.projectiles.forEach((projectile: any) => {
             const speed = -1.2
             const mesh = projectile.mesh
             mesh.position.x += speed / 10 * Math.cos(mesh.rotation.y)
             mesh.position.z += -speed / 10 * Math.sin(mesh.rotation.y)
         })
+        // collision detection
         // kill bullets after 5 seconds
         const maxAge = 5
         const limit = Date.now() - maxAge * 1000
         tank.projectiles = tank.projectiles.map((projectile: any) => {
-            if (projectile.created < limit) {
+            const hitTank = _.find(tanks, (otherTank: any) => {
+                if (otherTank === tank) {
+                    // can't hit yourself
+                    return false
+                }
+                // TODO hitting a barrel is a thing also
+                if (projectile.mesh.intersectsMesh(otherTank.turret, true)
+                    || projectile.mesh.intersectsMesh(otherTank.barrel, false)) {
+                    return true
+                }
+                return false
+                }
+            )
+
+            if (hitTank) {
+                this.ricochetSound.play()
+            }
+
+            if (hitTank || projectile.created < limit) {
                 projectile.mesh.dispose()
                 return null
             }
             return projectile
         }).filter((x: any) => x)
+
     }
 
     loop() {
