@@ -7,7 +7,7 @@ import {createProjectile} from "./projectile";
 
 
 const B = BABYLON
-
+let tankId: number = 1
 // TODO do grouping with parent relation ship.
 // Now there is a single mesh that can have only one material
 
@@ -71,6 +71,7 @@ export const createTank = (name: string, scene: Scene, position: Vector3, color:
 
     let lastShot: any = null
     const tank = {
+        id: tankId++,
         name: name,
         body: body,
         dead: false,

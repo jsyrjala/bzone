@@ -3,7 +3,7 @@ import {gamepadState, AXES, initGamePad} from './gamepad';
 import {createTank} from './objects/tank';
 import {createProjectile} from './objects/projectile';
 import _ from 'lodash'
-import {initKeyboard} from "./keyboard";
+import {getKeyboardState, initKeyboard} from "./keyboard";
 
 const B = BABYLON
 
@@ -21,6 +21,9 @@ export default class Renderer {
     private tanks = []
 
     createScene(canvas: HTMLCanvasElement, engine: BABYLON.Engine) {
+
+        BABYLON.Engine.audioEngine.setGlobalVolume(0);
+
         this._canvas = canvas;
 
         this._engine = engine;
@@ -85,15 +88,10 @@ export default class Renderer {
 
 
     gamepadControl(tank: any) {
-        const state = gamepadState();
-        if (!state) {
-            return
-        }
-
         const ly = gamepadState().axes[AXES.LEFT_Y]
         const lx = gamepadState().axes[AXES.LEFT_X]
 
-        const ry = gamepadState().axes[AXES.RIGHT_Y]
+        // const ry = gamepadState().axes[AXES.RIGHT_Y]
         const rx = gamepadState().axes[AXES.RIGHT_X]
 
         // control tank
@@ -111,13 +109,35 @@ export default class Renderer {
 
         // rotate turret
         tank.turret.rotation.y += rx / 20
+    }
 
-        // any button shoots
-        const buttonPressed = _.find(state.buttons, (x: any) => x)
+    keyboardControl(tank: any) {
+        const state = getKeyboardState(tank)
 
+        let ly = state.forward ? -1 : state.backward ? 1 : 0
+        let lx = state.right ? 1 : state.left ? -1 : 0
 
+        if (ly != 0 && lx != 0) {
+            const dist = Math.hypot(ly, lx)
+            ly /= dist
+            lx /= dist
+        }
+
+        // control tank
+        tank.body.rotation.y += lx / 40
+
+        let speed = ly
+
+        // reversing is slower
+        if (speed > 0) {
+            speed /= 2
+        }
+
+        tank.body.position.x += speed / 10 * Math.cos(tank.body.rotation.y)
+        tank.body.position.z += -speed / 10 * Math.sin(tank.body.rotation.y)
 
     }
+
 
     shoot(tank: any) {
         if (tank.canShoot()) {
@@ -178,8 +198,14 @@ export default class Renderer {
 
     loop() {
         this.counter ++
-        const tank = this.tanks[0]
-        this.gamepadControl(tank)
+
+        if (gamepadState()) {
+            this.gamepadControl(this.tanks[0])
+        }
+        this.keyboardControl(this.tanks[0])
+
+        this.keyboardControl(this.tanks[1])
+
 
         this.showCameraInfo()
 
