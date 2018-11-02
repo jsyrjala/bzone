@@ -27,6 +27,9 @@ export default class Renderer {
 
         // This creates a basic Babylon Scene object (non-mesh)
         const scene = new BABYLON.Scene(engine);
+        // needs babylonjs.worker.js lib
+        scene.workerCollisions = true
+
         this._scene = scene;
         // This creates and positions a free camera (non-mesh)
         const camera = new BABYLON.UniversalCamera("camera1", new BABYLON.Vector3(0, 1, -10), scene);
@@ -63,14 +66,14 @@ export default class Renderer {
         const grass0 = new BABYLON.StandardMaterial("grass0", scene);
         grass0.diffuseTexture = new BABYLON.Texture("assets/texture1.png", scene);
         ground.material = grass0
+        ground.checkCollisions = true;
 
         // sounds
         this.shootingSound = new BABYLON.Sound("50_cal", "assets/50_cal.wav", scene);
         this.ricochetSound = new BABYLON.Sound("ricochet", "assets/ricochet.wav", scene);
         this.explosionSounds = [
-            new BABYLON.Sound("explosion1", "assets/explosion1.wav", scene)
+            new BABYLON.Sound("explosion1", "assets/explosion1.wav", scene),
             new BABYLON.Sound("explosion2", "assets/explosion2.wav", scene)
-
         ];
 
     }

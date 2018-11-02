@@ -64,6 +64,8 @@ export const createTank = (name: string, scene: Scene, position: Vector3, color:
     barrel.parent = turret
     turret.parent = body
 
+    body.checkCollisions = true;
+
     let lastShot: any = null
     const tank = {
         name: name,
