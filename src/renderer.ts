@@ -15,7 +15,7 @@ export default class Renderer {
     private positionElem = document.querySelector('#position')
     private rotationElem = document.querySelector('#rotation')
     private objs: Array<any> = []
-
+    private shootingSound;
     private tanks = []
 
     createScene(canvas: HTMLCanvasElement, engine: BABYLON.Engine) {
@@ -62,6 +62,8 @@ export default class Renderer {
         grass0.diffuseTexture = new BABYLON.Texture("assets/texture1.png", scene);
         ground.material = grass0
 
+        this.shootingSound = new BABYLON.Sound("50_cal", "assets/50_cal.wav", scene);
+
         console.log(ground, this._canvas, this._engine)
     }
 
@@ -100,6 +102,7 @@ export default class Renderer {
         if (tank.canShoot() && buttonPressed) {
             const projectile = createProjectile(this._scene, tank)
             tank.projectiles.push(projectile)
+            this.shootingSound.play()
         }
 
         if (!buttonPressed) {
