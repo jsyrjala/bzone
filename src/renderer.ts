@@ -11,6 +11,7 @@ export default class Renderer {
     private camera: BABYLON.UniversalCamera
     private positionElem = document.querySelector('#position')
     private rotationElem = document.querySelector('#rotation')
+    private objs: Array<any> = []
 
     createScene(canvas: HTMLCanvasElement, engine: BABYLON.Engine) {
         this._canvas = canvas;
@@ -61,29 +62,47 @@ export default class Renderer {
     loop() {
         this.counter ++
         const state = gamepadState();
-        if (state) {
-            const ly = gamepadState().axes[AXES.LEFT_Y]
-            const lx = gamepadState().axes[AXES.LEFT_X]
-
-            const ry = gamepadState().axes[AXES.RIGHT_Y]
-            const rx = gamepadState().axes[AXES.RIGHT_X]
-
-            this.camera.position.x += lx / 10
-            this.camera.position.z += -ly / 10
-
-            this.camera.rotation.y +=  rx / 100
-            this.camera.rotation.x += ry / 100
-
-            this.positionElem.innerHTML = '' +
-                'x: ' + this.camera.position.x.toFixed(2) +
-                ', y: ' + this.camera.position.y.toFixed(2) +
-                ', z: ' + this.camera.position.z.toFixed(2)
-
-            this.rotationElem.innerHTML = '' +
-                'x: ' + this.camera.rotation.x.toFixed(2) +
-                ', y: ' + this.camera.rotation.y.toFixed(2) +
-                ', z: ' + this.camera.rotation.z.toFixed(2)
+        if (!state) {
+            return
         }
+
+        // Adding stuff on button press
+        if (state.buttons[0] && this.objs.length == 0){
+            const barrel2 = BABYLON.Mesh.CreateCylinder('cylinder2',
+                6.11, 0, 2, 6, 2,
+                this._scene)
+            barrel2.translate(new B.Vector3(0,0,-3), 2)
+            this.objs.push(barrel2)
+            console.log(barrel2)
+        }
+
+        // Removing stuff
+        if (state.buttons[1] && this.objs.length > 0){
+            this.objs[0].dispose()
+            this.objs = []
+        }
+
+        const ly = gamepadState().axes[AXES.LEFT_Y]
+        const lx = gamepadState().axes[AXES.LEFT_X]
+
+        const ry = gamepadState().axes[AXES.RIGHT_Y]
+        const rx = gamepadState().axes[AXES.RIGHT_X]
+
+        this.camera.position.x += lx / 10
+        this.camera.position.z += -ly / 10
+
+        this.camera.rotation.y +=  rx / 100
+        this.camera.rotation.x += ry / 100
+
+        this.positionElem.innerHTML = '' +
+            'x: ' + this.camera.position.x.toFixed(2) +
+            ', y: ' + this.camera.position.y.toFixed(2) +
+            ', z: ' + this.camera.position.z.toFixed(2)
+
+        this.rotationElem.innerHTML = '' +
+            'x: ' + this.camera.rotation.x.toFixed(2) +
+            ', y: ' + this.camera.rotation.y.toFixed(2) +
+            ', z: ' + this.camera.rotation.z.toFixed(2)
     }
 
     initialize(canvas: HTMLCanvasElement) {
