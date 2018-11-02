@@ -64,10 +64,21 @@ export const createTank = (name: string, scene: Scene, position: Vector3, color:
     barrel.parent = turret
     turret.parent = body
 
+    let lastShot: any = null
     return {
         body: body,
         turret: turret,
         color: color,
         projectiles: [],
+        canShoot: () => {
+            const now = Date.now()
+            const reloadSpeed = 500
+            if (!lastShot || lastShot + reloadSpeed < now) {
+                lastShot = now
+                return true
+            }
+            return false
+
+        }
     }
 }

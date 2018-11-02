@@ -2,6 +2,7 @@ import * as BABYLON from 'babylonjs';
 import {gamepadState, AXES} from './gamepad';
 import {createTank} from './objects/tank';
 import {createProjectile} from './objects/projectile';
+import _ from 'lodash'
 
 const B = BABYLON
 
@@ -73,13 +74,7 @@ export default class Renderer {
         const ry = gamepadState().axes[AXES.RIGHT_Y]
         const rx = gamepadState().axes[AXES.RIGHT_X]
 
-        // tank.position.x += lx / 10
-        // tank.position.z += -ly / 10
-
         // control tank
-
-        // TODO control turret with other stick
-
         tank.body.rotation.y += lx / 40
 
         let speed = ly
@@ -95,14 +90,15 @@ export default class Renderer {
         // rotate turret
         tank.turret.rotation.y += rx / 20
 
-        if (!tank.shooting && state.buttons[0]) {
-            tank.shooting = true
+        // any button shoots
+        const buttonPressed = _.find(state.buttons, (x: any) => x)
 
+        if (tank.canShoot() && buttonPressed) {
             const projectile = createProjectile(this._scene, tank)
             tank.projectiles.push(projectile)
         }
 
-        if (!state.buttons[0]) {
+        if (!buttonPressed) {
             tank.shooting = false
         }
     }
@@ -122,7 +118,7 @@ export default class Renderer {
 
     moveProjectiles(tank: any, tanks: any[]) {
         tank.projectiles.forEach((projectile: any) => {
-            const speed = -1
+            const speed = -1.2
             const mesh = projectile.mesh
             mesh.position.x += speed / 10 * Math.cos(mesh.rotation.y)
             mesh.position.z += -speed / 10 * Math.sin(mesh.rotation.y)

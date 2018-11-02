@@ -1,7 +1,5 @@
 import * as BABYLON from 'babylonjs';
 import Scene = BABYLON.Scene;
-import Color3 = BABYLON.Color3;
-import Vector3 = BABYLON.Vector3;
 
 // color: Color3, position: Vector3, rotation: Vector3) => {
 export const createProjectile = (scene: Scene, tank: any) => {
@@ -19,10 +17,18 @@ export const createProjectile = (scene: Scene, tank: any) => {
 
     const projectile = BABYLON.Mesh.MergeMeshes([head, body]);
     projectile.material = material
+
+    // TODO wrong starting position in some rotations, should be in ref to turret
     projectile.position = tank.body.position.clone()
+
+    // TODO should add tanks speed to bullet
     projectile.position.y = 0.9
+    projectile.position.x += 0
 
     projectile.rotation.y = tank.body.rotation.y + tank.turret.rotation.y
     projectile.rotation.z = Math.PI / 2
-    return projectile;
+    return {
+        mesh: projectile,
+        created: Date.now(),
+    };
 }
