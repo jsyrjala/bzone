@@ -67,23 +67,6 @@ export default class Renderer {
             return
         }
 
-        /*
-        // Adding stuff on button press
-        if (state.buttons[0] && this.objs.length == 0){
-            const barrel2 = BABYLON.Mesh.CreateCylinder('cylinder2',
-                6.11, 0, 2, 6, 2,
-                this._scene)
-            barrel2.translate(new B.Vector3(0,0,-3), 2)
-            this.objs.push(barrel2)
-            console.log(barrel2)
-        }
-
-        // Removing stuff
-        if (state.buttons[1] && this.objs.length > 0){
-            this.objs[0].dispose()
-            this.objs = []
-        }
-*/
         const ly = gamepadState().axes[AXES.LEFT_Y]
         const lx = gamepadState().axes[AXES.LEFT_X]
 
@@ -138,11 +121,22 @@ export default class Renderer {
 
 
     moveProjectiles(tank: any, tanks: any[]) {
-        tank.projectiles.forEach(projectile => {
+        tank.projectiles.forEach((projectile: any) => {
             const speed = -1
-            projectile.position.x += speed / 10 * Math.cos(projectile.rotation.y)
-            projectile.position.z += -speed / 10 * Math.sin(projectile.rotation.y)
+            const mesh = projectile.mesh
+            mesh.position.x += speed / 10 * Math.cos(mesh.rotation.y)
+            mesh.position.z += -speed / 10 * Math.sin(mesh.rotation.y)
         })
+        // kill bullets after 5 seconds
+        const maxAge = 5
+        const limit = Date.now() - maxAge * 1000
+        tank.projectiles = tank.projectiles.map((projectile: any) => {
+            if (projectile.created < limit) {
+                projectile.mesh.dispose()
+                return null
+            }
+            return projectile
+        }).filter((x: any) => x)
     }
 
     loop() {
