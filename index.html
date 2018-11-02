@@ -11,6 +11,21 @@
             height: 100%;
             touch-action: none;
         }
+
+        #pl1-score {
+            color: rgb(255,127,255);
+            position: absolute;
+            left: 10px;
+            font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
+            font-size: 2em;
+        }
+        #pl2-score {
+            color: rgb(0,255,255);
+            position: absolute;
+            right: 10px;
+            font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
+            font-size: 2em;
+        }
     </style>
 </head>
 <body>
@@ -20,7 +35,11 @@
     <div id="position"></div>
     <div id="rotation"></div>
 </section>
-<canvas id="render-canvas"></canvas>
+<div id="osd">
+    <div id="pl1-score">0</div>
+    <div id="pl2-score">0</div>
+    <canvas id="render-canvas"></canvas>
+</div>
 <script src="./src/index.ts"></script>
 </body>
 </html>

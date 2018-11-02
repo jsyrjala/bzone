@@ -79,6 +79,7 @@ export const createTank = (name: string, scene: Scene, position: Vector3, color:
         barrel: barrel,
         color: color,
         projectiles: [],
+        score: 0,
         die: () => {
             tank.dead = true
             tankMaterial.diffuseColor = Color3.Gray()

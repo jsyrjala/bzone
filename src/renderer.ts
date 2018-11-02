@@ -185,6 +185,8 @@ export default class Renderer {
             if (hitTank) {
                 this.explosionSounds[1].play()
                 hitTank.die()
+                tank.score ++
+                document.querySelector(`#pl${tank.id}-score`).innerHTML = tank.score
             }
 
             if (hitTank || projectile.created < limit) {
