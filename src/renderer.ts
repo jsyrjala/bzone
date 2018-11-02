@@ -128,10 +128,7 @@ export default class Renderer {
     moveProjectiles(tank: any, tanks: any[]) {
         // move bullets
         tank.projectiles.forEach((projectile: any) => {
-            const speed = -1.2
-            const mesh = projectile.mesh
-            mesh.position.x += speed / 10 * Math.cos(mesh.rotation.y)
-            mesh.position.z += -speed / 10 * Math.sin(mesh.rotation.y)
+            projectile.move()
         })
         // collision detection
         // kill bullets after 5 seconds
@@ -157,7 +154,7 @@ export default class Renderer {
             }
 
             if (hitTank || projectile.created < limit) {
-                projectile.mesh.dispose()
+                projectile.dispose()
                 return null
             }
             return projectile
