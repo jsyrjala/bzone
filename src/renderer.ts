@@ -57,7 +57,6 @@ export default class Renderer {
 
         this.tanks.push(tank2)
 
-
         // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
         const ground = BABYLON.Mesh.CreateGround("ground1", 16, 16, 22, scene);
         const grass0 = new BABYLON.StandardMaterial("grass0", scene);
@@ -140,14 +139,12 @@ export default class Renderer {
                     // can't hit yourself
                     return false
                 }
-                // TODO hitting a barrel is a thing also
                 if (projectile.mesh.intersectsMesh(otherTank.turret, true)
                     || projectile.mesh.intersectsMesh(otherTank.barrel, false)) {
                     return true
                 }
                 return false
-                }
-            )
+            })
 
             if (hitTank) {
                 this.ricochetSound.play()
