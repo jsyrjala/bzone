@@ -28,7 +28,7 @@ export default class Renderer {
         // This targets the camera to scene origin
         // camera.setTarget(BABYLON.Vector3.Zero());
 
-        camera.rotation = new B.Vector3(0,0.2,0)
+        camera.position = new B.Vector3(0,3,-20)
 
         // This attaches the camera to the canvas
         camera.attachControl(canvas, true);
@@ -37,13 +37,15 @@ export default class Renderer {
         const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 1), scene);
         light.intensity = 1;
 
-        const pos1 = new B.Vector3(0, 0, 0)
+        /// OBJECTS
+
+        const pos1 = new B.Vector3(-2, 0, 0)
         const tankColor1 = new BABYLON.Color3(1, 0.5, 1);
-        const tank1 = createTank(scene, pos1, tankColor1)
+        const tank1 = createTank('t1', scene, pos1, tankColor1)
 
         const pos2 = new B.Vector3(2, 0 , 0)
         const tankColor2 = new BABYLON.Color3(0, 1, 1);
-        const tank2 = createTank(scene, pos2, tankColor2)
+        const tank2 = createTank('t2', scene, pos2, tankColor2)
 
         // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
         const ground = BABYLON.Mesh.CreateGround("ground1", 16, 16, 22, scene);
