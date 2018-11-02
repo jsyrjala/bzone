@@ -25,7 +25,6 @@ const createBody = (scene: Scene, material: Material) => {
 
     tracks.parent = body
     return body
-    return BABYLON.Mesh.MergeMeshes([body, tracks]);
 }
 
 const createBarrel = (scene: Scene, material: Material) => {
@@ -67,6 +66,8 @@ export const createTank = (name: string, scene: Scene, position: Vector3, color:
 
     return {
         body: body,
-        turret: turret
+        turret: turret,
+        color: color,
+        projectiles: [],
     }
 }

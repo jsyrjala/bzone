@@ -1,6 +1,7 @@
 import * as BABYLON from 'babylonjs';
 import {gamepadState, AXES} from './gamepad';
 import {createTank} from './objects/tank';
+import {createProjectile} from './objects/projectile';
 
 const B = BABYLON
 
@@ -66,7 +67,7 @@ export default class Renderer {
             return
         }
 
-
+        /*
         // Adding stuff on button press
         if (state.buttons[0] && this.objs.length == 0){
             const barrel2 = BABYLON.Mesh.CreateCylinder('cylinder2',
@@ -82,7 +83,7 @@ export default class Renderer {
             this.objs[0].dispose()
             this.objs = []
         }
-
+*/
         const ly = gamepadState().axes[AXES.LEFT_Y]
         const lx = gamepadState().axes[AXES.LEFT_X]
 
@@ -110,6 +111,17 @@ export default class Renderer {
 
         // rotate turret
         tank.turret.rotation.y += rx / 20
+
+        if (!tank.shooting && state.buttons[0]) {
+            tank.shooting = true
+
+            const projectile = createProjectile(this._scene, tank)
+            tank.projectiles.push(projectile)
+        }
+
+        if (!state.buttons[0]) {
+            tank.shooting = false
+        }
     }
 
     showCameraInfo() {
@@ -123,6 +135,16 @@ export default class Renderer {
             ', y: ' + this.camera.rotation.y.toFixed(2) +
             ', z: ' + this.camera.rotation.z.toFixed(2)
     }
+
+
+    moveProjectiles(tank: any, tanks: any[]) {
+        tank.projectiles.forEach(projectile => {
+            const speed = -1
+            projectile.position.x += speed / 10 * Math.cos(projectile.rotation.y)
+            projectile.position.z += -speed / 10 * Math.sin(projectile.rotation.y)
+        })
+    }
+
     loop() {
         this.counter ++
         const tank = this.tanks[0]
@@ -130,6 +152,8 @@ export default class Renderer {
         this.gamepadControl(tank)
 
         this.showCameraInfo()
+
+        this.tanks.forEach(tank => this.moveProjectiles(tank, this.tanks))
     }
 
     initialize(canvas: HTMLCanvasElement) {
