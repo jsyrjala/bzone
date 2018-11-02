@@ -3,6 +3,7 @@ import Scene = BABYLON.Scene;
 import Material = BABYLON.Material;
 import {Color3} from 'babylonjs';
 import Vector3 = BABYLON.Vector3;
+import {createProjectile} from "./projectile";
 
 
 const B = BABYLON
@@ -47,6 +48,8 @@ const createTurret = (scene: Scene, material: Material) => {
 }
 
 export const createTank = (name: string, scene: Scene, position: Vector3, color: Color3) => {
+    const shootingSound = new BABYLON.Sound("50_cal", "assets/50_cal.wav", scene);
+    const clickSound = new BABYLON.Sound("click", "assets/click.wav", scene);
     const tankMaterial = new BABYLON.StandardMaterial(name + 'tankMaterial', scene);
     tankMaterial.diffuseColor = color
     tankMaterial.ambientColor = color
@@ -82,14 +85,23 @@ export const createTank = (name: string, scene: Scene, position: Vector3, color:
         },
         canShoot: () => {
             const now = Date.now()
-            const reloadSpeed = 500
+            const reloadSpeed = 600
             if (!lastShot || lastShot + reloadSpeed < now) {
                 lastShot = now
                 return true
             }
             return false
-
+        },
+        shoot: () => {
+            if (tank.canShoot()) {
+                const projectile = createProjectile(scene, tank)
+                tank.projectiles.push(projectile)
+                shootingSound.play()
+            } else {
+                clickSound.play()
+            }
         }
+
     }
 
     return tank

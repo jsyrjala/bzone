@@ -1,5 +1,5 @@
 import * as BABYLON from 'babylonjs';
-import {gamepadState, AXES} from './gamepad';
+import {gamepadState, AXES, initGamePad} from './gamepad';
 import {createTank} from './objects/tank';
 import {createProjectile} from './objects/projectile';
 import _ from 'lodash'
@@ -15,7 +15,6 @@ export default class Renderer {
     private positionElem = document.querySelector('#position')
     private rotationElem = document.querySelector('#rotation')
     private objs: Array<any> = []
-    private shootingSound;
     private ricochetSound;
     private explosionSounds
     private tanks = []
@@ -28,12 +27,13 @@ export default class Renderer {
         // This creates a basic Babylon Scene object (non-mesh)
         const scene = new BABYLON.Scene(engine);
         // needs babylonjs.worker.js lib
-        scene.workerCollisions = true
+        // scene.workerCollisions = true
 
         this._scene = scene;
         // This creates and positions a free camera (non-mesh)
         const camera = new BABYLON.UniversalCamera("camera1", new BABYLON.Vector3(0, 1, -10), scene);
         this.camera = camera
+
         // This targets the camera to scene origin
         // camera.setTarget(BABYLON.Vector3.Zero());
 
@@ -41,7 +41,10 @@ export default class Renderer {
         camera.rotation.x = 0.2
 
         // This attaches the camera to the canvas
-        camera.attachControl(canvas, true);
+        // TODO gamepad doesn't work if this is disabled
+        camera.attachControl(canvas, false);
+
+        // camera.inputs.addGamepad();
 
         // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
         const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 1), scene);
@@ -69,7 +72,6 @@ export default class Renderer {
         ground.checkCollisions = true;
 
         // sounds
-        this.shootingSound = new BABYLON.Sound("50_cal", "assets/50_cal.wav", scene);
         this.ricochetSound = new BABYLON.Sound("ricochet", "assets/ricochet.wav", scene);
         this.explosionSounds = [
             new BABYLON.Sound("explosion1", "assets/explosion1.wav", scene),
@@ -110,14 +112,15 @@ export default class Renderer {
         // any button shoots
         const buttonPressed = _.find(state.buttons, (x: any) => x)
 
-        if (tank.canShoot() && buttonPressed) {
+
+
+    }
+
+    shoot(tank: any) {
+        if (tank.canShoot()) {
             const projectile = createProjectile(this._scene, tank)
             tank.projectiles.push(projectile)
             this.shootingSound.play()
-        }
-
-        if (!buttonPressed) {
-            tank.shooting = false
         }
     }
 
@@ -173,7 +176,6 @@ export default class Renderer {
     loop() {
         this.counter ++
         const tank = this.tanks[0]
-
         this.gamepadControl(tank)
 
         this.showCameraInfo()
@@ -192,6 +194,8 @@ export default class Renderer {
         engine.runRenderLoop(() => {
             this._scene.render();
         });
+
+        initGamePad(this.tanks[0])
 
         window.addEventListener('resize', () => {
             engine.resize();

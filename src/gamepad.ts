@@ -51,7 +51,13 @@ const pollGamePad = (callback: Function) => {
     setTimeout(searchGamePad, 0)
 }
 
-export const initGamePad = () => {
+export const initGamePad = (tank: any) => {
+    const gamepadManager = new BABYLON.GamepadManager();
+    gamepadManager.onGamepadConnectedObservable.add((gamepad, state)=> {
+        gamepad.onButtonDownObservable.add(() => {
+            tank.shoot()
+        })
+    });
     pollGamePad(gamePadFound)
 }
 
