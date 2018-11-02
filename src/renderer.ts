@@ -14,6 +14,8 @@ export default class Renderer {
     private rotationElem = document.querySelector('#rotation')
     private objs: Array<any> = []
 
+    private tanks = []
+
     createScene(canvas: HTMLCanvasElement, engine: BABYLON.Engine) {
         this._canvas = canvas;
 
@@ -42,11 +44,15 @@ export default class Renderer {
         const pos1 = new B.Vector3(-2, 0, 0)
         const tankColor1 = new BABYLON.Color3(1, 0.5, 1);
         const tank1 = createTank('t1', scene, pos1, tankColor1)
+        this.tanks.push(tank1)
 
         const pos2 = new B.Vector3(2, 0 , 0)
         const tankColor2 = new BABYLON.Color3(0, 1, 1);
         const tank2 = createTank('t2', scene, pos2, tankColor2)
         tank2.rotation.y = -2
+
+        this.tanks.push(tank2)
+
 
         // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
         const ground = BABYLON.Mesh.CreateGround("ground1", 16, 16, 22, scene);
@@ -59,6 +65,8 @@ export default class Renderer {
         if (!state) {
             return
         }
+
+        const tank = this.tanks[0]
 
         // Adding stuff on button press
         if (state.buttons[0] && this.objs.length == 0){
@@ -82,11 +90,17 @@ export default class Renderer {
         const ry = gamepadState().axes[AXES.RIGHT_Y]
         const rx = gamepadState().axes[AXES.RIGHT_X]
 
-        this.camera.position.x += lx / 10
-        this.camera.position.z += -ly / 10
+        // tank.position.x += lx / 10
+        // tank.position.z += -ly / 10
 
-        this.camera.rotation.y +=  rx / 100
-        this.camera.rotation.x += ry / 100
+
+
+        tank.rotation.y +=  lx / 25
+
+        tank.position.x += ly / 10 * Math.cos(tank.rotation.y)
+        tank.position.z += -ly / 10 * Math.sin(tank.rotation.y)
+
+        // tank.rotation.x += ry / 25
 
         this.positionElem.innerHTML = '' +
             'x: ' + this.camera.position.x.toFixed(2) +
