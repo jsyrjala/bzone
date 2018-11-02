@@ -17,6 +17,7 @@ export default class Renderer {
     private objs: Array<any> = []
     private shootingSound;
     private ricochetSound;
+    private explosionSounds
     private tanks = []
 
     createScene(canvas: HTMLCanvasElement, engine: BABYLON.Engine) {
@@ -66,6 +67,12 @@ export default class Renderer {
         // sounds
         this.shootingSound = new BABYLON.Sound("50_cal", "assets/50_cal.wav", scene);
         this.ricochetSound = new BABYLON.Sound("ricochet", "assets/ricochet.wav", scene);
+        this.explosionSounds = [
+            new BABYLON.Sound("explosion1", "assets/explosion1.wav", scene)
+            new BABYLON.Sound("explosion2", "assets/explosion2.wav", scene)
+
+        ];
+
     }
 
 
@@ -147,7 +154,8 @@ export default class Renderer {
             })
 
             if (hitTank) {
-                this.ricochetSound.play()
+                this.explosionSounds[1].play()
+                hitTank.die()
             }
 
             if (hitTank || projectile.created < limit) {

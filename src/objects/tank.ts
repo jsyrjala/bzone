@@ -65,13 +65,19 @@ export const createTank = (name: string, scene: Scene, position: Vector3, color:
     turret.parent = body
 
     let lastShot: any = null
-    return {
+    const tank = {
         name: name,
         body: body,
+        dead: false,
         turret: turret,
         barrel: barrel,
         color: color,
         projectiles: [],
+        die: () => {
+            tank.dead = true
+            tankMaterial.diffuseColor = Color3.Gray()
+            tankMaterial.ambientColor = Color3.Black()
+        },
         canShoot: () => {
             const now = Date.now()
             const reloadSpeed = 500
@@ -83,4 +89,6 @@ export const createTank = (name: string, scene: Scene, position: Vector3, color:
 
         }
     }
+
+    return tank
 }
