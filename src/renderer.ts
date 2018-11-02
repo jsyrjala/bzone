@@ -16,6 +16,7 @@ export default class Renderer {
     private rotationElem = document.querySelector('#rotation')
     private objs: Array<any> = []
     private shootingSound;
+    private ricochetSound;
     private tanks = []
 
     createScene(canvas: HTMLCanvasElement, engine: BABYLON.Engine) {
@@ -63,7 +64,7 @@ export default class Renderer {
         ground.material = grass0
 
         this.shootingSound = new BABYLON.Sound("50_cal", "assets/50_cal.wav", scene);
-
+        this.ricochetSound = new BABYLON.Sound("ricochet", "assets/ricochet.wav", scene);
         console.log(ground, this._canvas, this._engine)
     }
 
