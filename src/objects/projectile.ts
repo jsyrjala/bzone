@@ -51,7 +51,9 @@ export const createProjectile = (scene: Scene, tank: any) => {
             particleSystem.emitter = projectile.position.clone()
             particleSystem.stop();
             projectile.dispose()
-
+            // show particles after projectile hits, so wait a while
+            // before removing particles
+            setTimeout(() => particleSystem.dispose(), 2000)
         },
         move: () => {
             const speed = -1.2
