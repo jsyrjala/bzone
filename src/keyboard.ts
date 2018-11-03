@@ -5,14 +5,14 @@ const playerKeys: any = {}
 
 const controlSets = [
     {
-        shootCode: 'ShiftLeft',
-        leftCode: 'KeyA', rightCode: 'KeyD',
-        forwardCode: 'KeyW', backwardCode: 'KeyS'},
-    {
         shootCode: 'ShiftRight',
         leftCode: 'ArrowLeft', rightCode: 'ArrowRight',
         forwardCode: 'ArrowUp', backwardCode: 'ArrowDown'
-    }
+    },
+    {
+        shootCode: 'ShiftLeft',
+        leftCode: 'KeyA', rightCode: 'KeyD',
+        forwardCode: 'KeyW', backwardCode: 'KeyS'}
 ]
 
 const keyDownHandler = (event: KeyboardEvent) => {
@@ -25,6 +25,9 @@ const keyDownHandler = (event: KeyboardEvent) => {
 
 export const getKeyboardState = (tank: any) => {
     const keys = playerKeys[tank.id]
+    if (!keys) {
+        console.log('no keys found for tank', tank.id, playerKeys)
+    }
     return {
         left: STATE[keys.left],
         right: STATE[keys.right],

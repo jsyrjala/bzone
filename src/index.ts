@@ -51,6 +51,6 @@ const player = {
     name: playerName
 }
 const network = new Network(url, clientId, player, screen)
-network.init()
-const renderer = new Renderer(network, screen);
+const renderer = new Renderer(network, screen, clientId);
+network.init(renderer)
 renderer.initialize(document.getElementById('render-canvas') as HTMLCanvasElement);

@@ -1,5 +1,6 @@
 import io from 'socket.io-client'
 import { Screen } from './ui'
+import Renderer from "./renderer";
 
 export class Network {
     private clientId;
@@ -9,6 +10,7 @@ export class Network {
     private player;
     private screen: Screen;
     private gameStarted: boolean = false
+    private renderer: Renderer
 
     constructor(url: string, clientId: string, player: any, screen: Screen) {
         this.clientId = clientId
@@ -18,8 +20,9 @@ export class Network {
 
     }
 
-    init() {
+    init(renderer: Renderer) {
         console.log('network: initialize')
+        this.renderer = renderer
         this.socket = io(this.url)
 
         this.socket.on('connect', () => {
@@ -41,7 +44,13 @@ export class Network {
         this.socket.on('start', (msg: any) => {
             console.log('game starting', msg)
             this.gameStarted = true
+            // TODO renderer.createPlayers
+            this.renderer.createPlayers(msg.players)
             this.screen.updatePlayers(msg.players)
+        })
+
+        this.socket.on('tankState', (msg: any) => {
+            // this.screen.updatePlayer(msg)
         })
     }
 

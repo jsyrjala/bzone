@@ -5,6 +5,7 @@ import {createProjectile} from './objects/projectile';
 import _ from 'lodash'
 import {getKeyboardState, initKeyboard} from "./keyboard";
 import {Network} from "./network";
+import {Screen} from './ui'
 
 const B = BABYLON
 
@@ -19,13 +20,16 @@ export default class Renderer {
     private objs: Array<any> = []
     private ricochetSound;
     private explosionSounds
-    private tanks = []
+    private tanks: any[] = []
+    private players: any[] = []
     private network: Network;
     private screen: Screen;
+    private clientId: string
 
-    constructor(network: Network, screen: Screen) {
+    constructor(network: Network, screen: Screen, clientId: String) {
         this.network = network
         this.screen = screen
+        this.clientId = clientId
     }
 
     createScene(canvas: HTMLCanvasElement, engine: BABYLON.Engine) {
@@ -65,7 +69,7 @@ export default class Renderer {
         light.intensity = 1;
 
         // TODO
-        this.createPlayers([])
+        // this.createPlayers([])
 
         // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
         const ground = BABYLON.Mesh.CreateGround("ground1", 16, 16, 22, scene);
@@ -84,17 +88,22 @@ export default class Renderer {
     }
 
     createPlayers(players: any[]) {
-        const pos1 = new B.Vector3(-2, 0, 0)
-        const tankColor1 = new BABYLON.Color3(1, 0.5, 1);
-        const tank1 = createTank('t1', this._scene, pos1, tankColor1)
-        this.tanks.push(tank1)
+        this.tanks.forEach(tank => tank.dispose())
+        this.tanks = []
+        players.forEach(player => {
+            this.players.push(player)
+            const position = new B.Vector3(-2, 0, 0)
+            const tankColor = new BABYLON.Color3(player.color.r, player.color.g, player.color.b);
+            const tank = createTank('t1', this._scene, position, tankColor)
+            this.tanks.push(tank)
+            player.tank = tank
 
-        const pos2 = new B.Vector3(2, 0 , 0)
-        const tankColor2 = new BABYLON.Color3(0, 1, 1);
-        const tank2 = createTank('t2', this._scene, pos2, tankColor2)
-        tank2.body.rotation.y = -2
-
-        this.tanks.push(tank2)
+            console.log('clientId', player)
+            if (this.clientId === player.clientId) {
+                initGamePad(tank)
+                initKeyboard([tank])
+            }
+        })
     }
 
     gamepadControl(tank: any) {
@@ -212,20 +221,42 @@ export default class Renderer {
     loop() {
         this.counter ++
 
-        if (gamepadState()) {
-            this.gamepadControl(this.tanks[0])
+        if (this.tanks.length === 0) {
+
+            return
         }
-        this.keyboardControl(this.tanks[0])
 
-        this.keyboardControl(this.tanks[1])
+        this.players.forEach((player: any) => {
+
+            if (this.clientId === player.clientId) {
+                if (gamepadState()) {
+                    this.gamepadControl(player.tank)
+                }
+                this.keyboardControl(player.tank)
+
+                this.network.sendState(player.tank)
+
+                this.moveProjectiles(player.tank, this.tanks)
+            }
+
+        })
+
+        /*
+                if (gamepadState()) {
+                    this.gamepadControl(this.tanks[0])
+                }
 
 
-        this.showCameraInfo()
+                this.keyboardControl(this.tanks[0])
 
-        this.tanks.forEach(tank => this.moveProjectiles(tank, this.tanks))
+                this.keyboardControl(this.tanks[1])
 
-        this.network.sendState(this.tanks[0])
+                this.showCameraInfo()
 
+                this.tanks.forEach(tank => this.moveProjectiles(tank, this.tanks))
+
+                this.network.sendState(this.tanks[0])
+        */
         /*
         this.tanks.forEach((tank: any) => {
             this.network.sendState(tank)
@@ -245,10 +276,6 @@ export default class Renderer {
         engine.runRenderLoop(() => {
             this._scene.render();
         });
-
-        initGamePad(this.tanks[0])
-        initKeyboard(this.tanks)
-
 
 
         window.addEventListener('resize', () => {
