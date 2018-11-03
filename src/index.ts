@@ -44,7 +44,7 @@ const clientId = uuidv4()
 
 console.log('START: clientId', clientId)
 
-const url = 'http://localhost:3000'
+const url = 'http://192.168.1.105:3000'
 const screen = new Screen(clientId)
 
 const player = {
