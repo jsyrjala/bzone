@@ -28,10 +28,6 @@ export class Network {
             })
         })
 
-        this.socket.on('color', (msg: any) => {
-            console.log('color', msg)
-        })
-
         this.socket.on('errorMessage', (msg: any) => {
             console.log('errorMessage', msg)
         })
@@ -43,17 +39,6 @@ export class Network {
         this.socket.on('start', (msg: any) => {
             console.log('game starting', msg)
             this.screen.updatePlayers(msg.players)
-            const elem = document.querySelector('#player-info')
-            const playerInfo = msg.players.map((player: any) => {
-                const color = `rgb(${player.color.r*255},${player.color.g*255},${player.color.b*255})`
-                if (player.id == this.clientId) {
-                    // this is me
-                    return `<div style="color: ${color}"><strong>${player.name}: ${player.score}</strong></div>`
-                }
-
-                return `<div style="color: ${color}">${player.name}: ${player.score}</div>`
-            }).join('')
-            elem.innerHTML = playerInfo
         })
     }
 

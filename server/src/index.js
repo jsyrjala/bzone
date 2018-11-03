@@ -67,8 +67,9 @@ io.on('connection', (socket) => {
     const client = msg
     client.player.score = 0
     client.player.color = availableColors[Object.keys(playersWaiting).length]
-    client.socket = socket
     client.id = uuid()
+    client.player.clientId = client.id
+    client.socket = socket
 
     clients[client.id] = client
 
@@ -101,9 +102,21 @@ io.on('connection', (socket) => {
       })
     }
   });
-
+/*
   socket.on('tankState', msg => {
-    // console.log('tankState', msg)
-    msg.clientId
+    const client = clients[msg.clientId]
+    if (!client) {
+      console.log('client not registered', msg.clientId, Object.values(clients).map(c => c.id))
+      return
+    }
+    const game = games[client.gameId]
+
+    game.clients.forEach(otherClient => {
+      if (otherClient.id === client.id) {
+        otherClient.socket.emit('tankState', msg)
+      }
+    })
+
   })
+*/
 });

@@ -3,6 +3,18 @@ const STATE: any = {}
 const observers: any = {}
 const playerKeys: any = {}
 
+const controlSets = [
+    {
+        shootCode: 'ShiftLeft',
+        leftCode: 'KeyA', rightCode: 'KeyD',
+        forwardCode: 'KeyW', backwardCode: 'KeyS'},
+    {
+        shootCode: 'ShiftRight',
+        leftCode: 'ArrowLeft', rightCode: 'ArrowRight',
+        forwardCode: 'ArrowUp', backwardCode: 'ArrowDown'
+    }
+]
+
 const keyDownHandler = (event: KeyboardEvent) => {
     // ArrowUp
     STATE[event.code] = true
@@ -25,15 +37,13 @@ const keyUpHandler = (event: KeyboardEvent) => {
     STATE[event.code] = false
 }
 
-const register = (tank: any, shootCode: string,
-                  leftCode: string, rightCode: string,
-                  forwardCode: string, backwardCode: string) => {
-    observers[shootCode] = () => tank.shoot()
+const register = (tank: any, controlSet: any) => {
+    observers[controlSet.shootCode] = () => tank.shoot()
     playerKeys[tank.id] = {
-        left: leftCode,
-        right: rightCode,
-        forward: forwardCode,
-        backward: backwardCode,
+        left: controlSet.leftCode,
+        right: controlSet.rightCode,
+        forward: controlSet.forwardCode,
+        backward: controlSet.backwardCode,
     }
 }
 
@@ -42,11 +52,7 @@ export const initKeyboard = (tanks: any[]) => {
     document.addEventListener('keydown', keyDownHandler, false);
     document.addEventListener('keyup', keyUpHandler, false);
 
-    register(tanks[0], 'ShiftLeft',
-        'KeyA', 'KeyD',
-        'KeyW', 'KeyS')
-
-    register(tanks[1], 'ShiftRight',
-        'ArrowLeft', 'ArrowRight',
-        'ArrowUp', 'ArrowDown')
+    for (let i = 0; i < tanks.length && i < controlSets.length; i ++) {
+        register(tanks[i], controlSets[i])
+    }
 }
