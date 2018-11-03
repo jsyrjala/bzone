@@ -4,6 +4,7 @@ import {createTank} from './objects/tank';
 import {createProjectile} from './objects/projectile';
 import _ from 'lodash'
 import {getKeyboardState, initKeyboard} from "./keyboard";
+import {Network} from "./network";
 
 const B = BABYLON
 
@@ -19,6 +20,11 @@ export default class Renderer {
     private ricochetSound;
     private explosionSounds
     private tanks = []
+    private network;
+
+    constructor(network: Network) {
+        this.network = network
+    }
 
     createScene(canvas: HTMLCanvasElement, engine: BABYLON.Engine) {
 
@@ -212,10 +218,15 @@ export default class Renderer {
         this.showCameraInfo()
 
         this.tanks.forEach(tank => this.moveProjectiles(tank, this.tanks))
+
+        this.tanks.forEach((tank: any) => {
+            this.network.sendState(tank)
+        })
     }
 
     initialize(canvas: HTMLCanvasElement) {
         const w: any = window
+
         w.HOT_SWAP_COUNTER = w.HOT_SWAP_COUNTER+1 || 0
         console.info('Hot swap counter', w.HOT_SWAP_COUNTER)
         const engine = new BABYLON.Engine(canvas, true);
@@ -228,6 +239,8 @@ export default class Renderer {
 
         initGamePad(this.tanks[0])
         initKeyboard(this.tanks)
+
+
 
         window.addEventListener('resize', () => {
             engine.resize();
