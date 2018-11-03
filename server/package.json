@@ -1,0 +1,9 @@
+{
+  "name": "bzone-server",
+  "version": "0.0.1",
+  "description": "bzone server",
+  "dependencies": {
+    "expressjs": "1.0.1",
+    "socket.io": "2.1.1"
+  }
+}
