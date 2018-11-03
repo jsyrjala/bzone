@@ -52,6 +52,11 @@ export class Network {
         this.socket.on('tankState', (msg: any) => {
             this.renderer.updatePlayer(msg)
         })
+
+        this.socket.on('projectile', (msg: any) => {
+            console.log('projectile', msg)
+            //this.renderer.createProjectile(msg)
+        })
     }
 
     sendState(player: any) {
@@ -70,6 +75,16 @@ export class Network {
             },
             turret: {
                 rotation: tank.turret.rotation
+            }
+        })
+    }
+
+    sendProjectile(projectile: any) {
+        this.socket.emit('projectile', {
+            clientId: this.clientId,
+            body: {
+                position: projectile.mesh.position,
+                rotation: projectile.mesh.rotation,
             }
         })
     }

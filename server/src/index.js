@@ -102,10 +102,9 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('tankState', msg => {
+  const sendToOtherGameParticipants = (event, msg) => {
     const client = clients[serverClientId]
     if (!client) {
-      console.log('Tank state: client not registered', msg.clientId, msg, Object.values(clients).map(c => c.id))
       return
     }
     const game = games[client.gameId]
@@ -113,12 +112,18 @@ io.on('connection', (socket) => {
       return
     }
     game.clients.forEach(otherClient => {
-      //console.log('foo tankstate', client.clientId)
       if (otherClient.clientId !== client.clientId) {
-        otherClient.socket.emit('tankState', msg)
+        otherClient.socket.emit(event, msg)
       }
     })
+  }
 
+  socket.on('tankState', msg => {
+    sendToOtherGameParticipants('tankState', msg)
+  })
+
+  socket.on('projectile', msg => {
+    sendToOtherGameParticipants('projectile', msg)
   })
 
 });

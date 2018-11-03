@@ -169,14 +169,6 @@ export default class Renderer {
         })
     }
 
-    shoot(tank: any) {
-        if (tank.canShoot()) {
-            const projectile = createProjectile(this._scene, tank)
-            tank.projectiles.push(projectile)
-            this.shootingSound.play()
-        }
-    }
-
     showCameraInfo() {
         this.positionElem.innerHTML = '' +
             'x: ' + this.camera.position.x.toFixed(2) +
