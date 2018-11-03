@@ -96,7 +96,6 @@ export const createTank = (name: string, network: Network, scene: Scene, positio
             return false
         },
         shoot: () => {
-            console.log('many shoot')
             if (tank.canShoot()) {
                 const projectile = createProjectileFromTank(scene, tank)
                 tank.attachProjectile(projectile, true)
@@ -105,9 +104,9 @@ export const createTank = (name: string, network: Network, scene: Scene, positio
             }
         },
         attachProjectile: (projectile: any, notifyOthers: boolean = false) => {
-            shootingSound.play()
             tank.projectiles.push(projectile)
             notifyOthers && network.sendNewProjectile(projectile)
+            shootingSound.play()
         }
     }
 

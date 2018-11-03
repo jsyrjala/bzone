@@ -33,9 +33,9 @@ let playerName = _.shuffle([
     'Zulu',
 ])[0]
 
-const m = location.search.match(/name=(\w+)/)
+const m = location.search.match(/name=([^&]+)/)
 if (m) {
-    playerName = m[1]
+    playerName = decodeURIComponent(m[1])
 }
 
 // mute
