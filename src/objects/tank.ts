@@ -34,17 +34,17 @@ const createBarrel = (scene: Scene, material: Material) => {
         12, 2, scene)
     barrel.material = material
     barrel.position.x = -0.7
-    barrel.position.y = 0.8
+    barrel.position.y = 0.3
     barrel.rotation.z = -3.14/2
     return barrel
 }
 
 const createTurret = (scene: Scene, material: Material) => {
-    const barrel = BABYLON.Mesh.CreateCylinder('tower', 2, 0.8, 1,
+    const barrel = BABYLON.Mesh.CreateCylinder('turret', 0.9, 0.8, 1,
         12, 4, scene)
     barrel.material = material
     barrel.position.x = 0.3
-    barrel.position.y = -0.3
+    barrel.position.y = 0.2
     return barrel
 }
 
