@@ -108,11 +108,13 @@ io.on('connection', (socket) => {
       console.log('Tank state: client not registered', msg.clientId, msg, Object.values(clients).map(c => c.id))
       return
     }
-
     const game = games[client.gameId]
-
+    if (!game) {
+      return
+    }
     game.clients.forEach(otherClient => {
-      if (otherClient.serverClientId === client.serverClientId) {
+      //console.log('foo tankstate', client.clientId)
+      if (otherClient.clientId !== client.clientId) {
         otherClient.socket.emit('tankState', msg)
       }
     })

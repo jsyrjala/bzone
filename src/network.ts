@@ -50,13 +50,16 @@ export class Network {
         })
 
         this.socket.on('tankState', (msg: any) => {
-
-            // this.screen.updatePlayer(msg)
+            this.renderer.updatePlayer(msg)
         })
     }
 
-    sendState(tank: any) {
+    sendState(player: any) {
+        const tank = player.tank
         if (!this.gameStarted) {
+            return
+        }
+        if (player.clientId != this.clientId){
             return
         }
         this.socket.emit('tankState', {

@@ -84,17 +84,17 @@ export default class Renderer {
     }
 
     createPlayers(players: any[]) {
-        this.tanks.forEach(tank => tank.dispose())
+        // this.tanks.forEach(tank => tank.dispose())
         this.tanks = []
+        let counter = 1
         players.forEach(player => {
             this.players.push(player)
-            const position = new B.Vector3(-2, 0, 0)
+            const position = new B.Vector3(counter ++, 0, 0)
             const tankColor = new BABYLON.Color3(player.color.r, player.color.g, player.color.b);
-            const tank = createTank('t1', this._scene, position, tankColor)
+            const tank = createTank('t' + counter, this._scene, position, tankColor)
             this.tanks.push(tank)
             player.tank = tank
 
-            console.log('clientId', player)
             if (this.clientId === player.clientId) {
                 initGamePad(tank)
                 initKeyboard([tank])
@@ -153,6 +153,21 @@ export default class Renderer {
 
     }
 
+    remoteControl(tank: any, tankState: any) {
+        const pos = tankState.body.position
+        tank.body.position = new B.Vector3(pos.x, pos.y, pos.z)
+        const rot = tankState.body.rotation
+        tank.body.rotation = new B.Vector3(rot.x, rot.y, rot.z)
+        tank.turret.rotation = tankState.turret.rotation
+    }
+
+    updatePlayer(tankState: any) {
+        this.players.forEach(player => {
+            if (this.clientId !== player.clientId) {
+                this.remoteControl(player.tank, tankState)
+            }
+        })
+    }
 
     shoot(tank: any) {
         if (tank.canShoot()) {
@@ -229,10 +244,9 @@ export default class Renderer {
                 }
                 this.keyboardControl(player.tank)
 
-                this.network.sendState(player.tank)
 
                 this.moveProjectiles(player.tank, this.tanks)
-                this.network.sendState(player.tank)
+                this.network.sendState(player)
             }
         })
     }
