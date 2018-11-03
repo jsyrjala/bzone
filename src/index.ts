@@ -41,6 +41,9 @@ if (m) {
 // mute
 const clientId = uuidv4()
 
+
+console.log('clientId', clientId)
+
 const url = 'http://localhost:3000'
 const screen = new Screen(clientId)
 

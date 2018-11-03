@@ -23,7 +23,9 @@ http.listen(3000, () => {
 });
 
 io.on('connection', (socket) => {
-  console.log('User connected');
+  const serverClientId = uuid()
+
+  console.log('User connected', serverClientId);
   socket.on('disconnect', (error) => {
     console.log('User disconnected', error);
     // remove from waiting list
@@ -59,18 +61,15 @@ io.on('connection', (socket) => {
     }
 
   });
-});
 
-io.on('connection', (socket) => {
   socket.on('hello', (msg) => {
     console.log('User hello', msg)
     const client = msg
     client.player.score = 0
     client.player.color = availableColors[Object.keys(playersWaiting).length]
-    client.id = uuid()
-    client.player.clientId = client.id
+    client.id = serverClientId
+    client.player.clientId = client.clientId
     client.socket = socket
-
     clients[client.id] = client
 
     playersWaiting.push(client)
@@ -102,21 +101,22 @@ io.on('connection', (socket) => {
       })
     }
   });
-/*
+
   socket.on('tankState', msg => {
-    const client = clients[msg.clientId]
+    const client = clients[serverClientId]
     if (!client) {
-      console.log('client not registered', msg.clientId, Object.values(clients).map(c => c.id))
+      console.log('Tank state: client not registered', msg.clientId, msg, Object.values(clients).map(c => c.id))
       return
     }
+
     const game = games[client.gameId]
 
     game.clients.forEach(otherClient => {
-      if (otherClient.id === client.id) {
+      if (otherClient.serverClientId === client.serverClientId) {
         otherClient.socket.emit('tankState', msg)
       }
     })
 
   })
-*/
+
 });

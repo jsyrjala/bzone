@@ -8,12 +8,14 @@ export class Network {
 
     private player;
     private screen: Screen;
+    private gameStarted: boolean = false
 
     constructor(url: string, clientId: string, player: any, screen: Screen) {
         this.clientId = clientId
         this.url = url
         this.player = player
         this.screen = screen
+
     }
 
     init() {
@@ -38,11 +40,15 @@ export class Network {
 
         this.socket.on('start', (msg: any) => {
             console.log('game starting', msg)
+            this.gameStarted = true
             this.screen.updatePlayers(msg.players)
         })
     }
 
     sendState(tank: any) {
+        if (!this.gameStarted) {
+            return
+        }
         this.socket.emit('tankState', {
             clientId: this.clientId,
             body: {
