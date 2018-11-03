@@ -171,7 +171,7 @@ etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
 
-express@^4.16.4:
+express@4.16.4:
   version "4.16.4"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.4.tgz#fddef61926109e24c515ea97fd2f1bdbf62df12e"
   dependencies:
@@ -205,10 +205,6 @@ express@^4.16.4:
     type-is "~1.6.16"
     utils-merge "1.0.1"
     vary "~1.1.2"
-
-expressjs@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/expressjs/-/expressjs-1.0.1.tgz#220328469a18df5ad615e2b7a0ce995f17fbaeef"
 
 finalhandler@1.1.1:
   version "1.1.1"
@@ -470,6 +466,10 @@ unpipe@1.0.0, unpipe@~1.0.0:
 utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
+
+uuid@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 
 vary@~1.1.2:
   version "1.1.2"
