@@ -8,11 +8,16 @@ const controlSets = [
         shootCode: 'ShiftRight',
         leftCode: 'ArrowLeft', rightCode: 'ArrowRight',
         forwardCode: 'ArrowUp', backwardCode: 'ArrowDown'
-    },
-    {
+    }, {
         shootCode: 'ShiftLeft',
         leftCode: 'KeyA', rightCode: 'KeyD',
-        forwardCode: 'KeyW', backwardCode: 'KeyS'}
+        forwardCode: 'KeyW', backwardCode: 'KeyS'
+    }, {
+        shootCode: 'Space',
+        leftCode: 'KeyJ', rightCode: 'KeyL',
+        forwardCode: 'KeyI', backwardCode: 'KeyK'
+    }
+
 ]
 
 const keyDownHandler = (event: KeyboardEvent) => {

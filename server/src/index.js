@@ -7,6 +7,7 @@ const clients = {}
 const availableColors = [
   {r: 1, g: 0.5, b: 1},
   {r: 0, g: 1, b: 1},
+  {r: 1, g: 1, b: 1},
 ]
 
 const games = {}
@@ -85,6 +86,7 @@ io.on('connection', (socket) => {
       games[game.id] = game
       console.log('Start game', game.id)
 
+      // randomize locations
       game.clients.filter(client => {
         client.socket.emit('start', {
           players: game.clients.map(client => client.player)

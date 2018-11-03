@@ -44,7 +44,6 @@ export class Network {
         this.socket.on('start', (msg: any) => {
             console.log('game starting', msg)
             this.gameStarted = true
-            // TODO renderer.createPlayers
             this.renderer.createPlayers(msg.players)
             this.screen.updatePlayers(msg.players)
         })

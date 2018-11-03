@@ -107,7 +107,6 @@ export default class Renderer {
             if (msg.clientId !== player.clientId) {
                 return
             }
-            console.log('create makeProj', msg)
             const projectile = createProjectileObject(this._scene, player.tank.color,
                 msg.body.position, msg.body.rotation)
 
