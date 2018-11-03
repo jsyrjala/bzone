@@ -219,9 +219,13 @@ export default class Renderer {
 
         this.tanks.forEach(tank => this.moveProjectiles(tank, this.tanks))
 
+        this.network.sendState(this.tanks[0])
+
+        /*
         this.tanks.forEach((tank: any) => {
             this.network.sendState(tank)
         })
+        */
     }
 
     initialize(canvas: HTMLCanvasElement) {

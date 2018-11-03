@@ -17,10 +17,14 @@ export class Network {
         console.log('network: initialize')
         this.socket = io(this.url)
 
-        this.socket.emit('hello', {
-            clientId: this.clientId,
-            player: this.player,
+        this.socket.on('connect', () => {
+            console.log('Connected to server')
+            this.socket.emit('hello', {
+                clientId: this.clientId,
+                player: this.player,
+            })
         })
+
 
         this.socket.on('color', (msg: any) => {
             console.log('color', msg)
