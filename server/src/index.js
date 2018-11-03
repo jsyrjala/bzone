@@ -21,7 +21,7 @@ app.use(express.static('../dist'))
 const PORT = process.env.PORT || 3000
 
 http.listen(PORT, () => {
-    console.log('listening on *:3000');
+    console.log('listening on *:' + PORT);
 });
 
 io.on('connection', (socket) => {
