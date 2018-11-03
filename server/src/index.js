@@ -118,13 +118,30 @@ io.on('connection', (socket) => {
     })
   }
 
+  const sendToAllGameParticipants = (event, msg) => {
+    const client = clients[serverClientId]
+    if (!client) {
+      return
+    }
+    const game = games[client.gameId]
+    if (!game) {
+      return
+    }
+    game.clients.forEach(otherClient => {
+      otherClient.socket.emit(event, msg)
+    })
+  }
+
   socket.on('tankState', msg => {
     sendToOtherGameParticipants('tankState', msg)
   })
 
   socket.on('newProjectile', msg => {
-    console.log('newProjectile', msg)
     sendToOtherGameParticipants('newProjectile', msg)
+  })
+
+  socket.on('scoreUpdate', msg => {
+    sendToAllGameParticipants('scoreUpdate', msg)
   })
 
 });

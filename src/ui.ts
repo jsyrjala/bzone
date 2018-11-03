@@ -8,6 +8,8 @@ export class Screen {
 
     public updatePlayers(players: any[]) {
         const elem: any = document.querySelector('#player-info')
+
+
         const playerInfo = players.map((player: any) => {
             const color = `rgb(${player.color.r*255},${player.color.g*255},${player.color.b*255})`
             if (player.id == this.clientId) {
@@ -19,4 +21,5 @@ export class Screen {
         }).join('')
         elem.innerHTML = playerInfo
     }
+
 }

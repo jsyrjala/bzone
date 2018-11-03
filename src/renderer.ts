@@ -60,7 +60,7 @@ export default class Renderer {
 
         // This attaches the camera to the canvas
         // TODO gamepad doesn't work if this is disabled
-        camera.attachControl(canvas, false);
+        // camera.attachControl(canvas, false);
 
         // camera.inputs.addGamepad();
 
@@ -195,7 +195,8 @@ export default class Renderer {
     }
 
 
-    moveProjectiles(tank: any, tanks: any[]) {
+    moveProjectiles(player: any, tanks: any[]) {
+        const tank = player.tank
         // move bullets
         tank.projectiles.forEach((projectile: any) => {
             projectile.move()
@@ -220,9 +221,10 @@ export default class Renderer {
             if (hitTank) {
                 this.explosionSounds[1].play()
                 hitTank.die()
-                tank.score ++
-                // TODO update via screen
-                // document.querySelector(`#pl${tank.id}-score`).innerHTML = tank.score
+                if (player.clientId === this.clientId) {
+                    tank.score ++
+                    this.network.sendScoreUpdate(tank.score)
+                }
             }
 
             if (hitTank || projectile.created < limit) {
@@ -242,7 +244,7 @@ export default class Renderer {
         }
 
         this.players.forEach((player: any) => {
-            this.moveProjectiles(player.tank, this.tanks)
+            this.moveProjectiles(player, this.tanks)
             if (this.clientId === player.clientId) {
                 if (gamepadState()) {
                     this.gamepadControl(player.tank)
@@ -251,6 +253,15 @@ export default class Renderer {
                 this.network.sendState(player)
             }
         })
+    }
+
+    updateScore(msg: any) {
+        this.players.forEach(player => {
+            if (player.clientId == msg.clientId) {
+                player.score = msg.score
+            }
+        })
+        this.screen.updatePlayers(this.players)
     }
 
     initialize(canvas: HTMLCanvasElement) {

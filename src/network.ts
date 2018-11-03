@@ -54,8 +54,11 @@ export class Network {
         })
 
         this.socket.on('newProjectile', (msg: any) => {
-            console.log('new proj msg', msg)
             this.renderer.makeProjectile(msg)
+        })
+
+        this.socket.on('scoreUpdate', (msg: any) => {
+            this.renderer.updateScore(msg)
         })
     }
 
@@ -89,4 +92,10 @@ export class Network {
         })
     }
 
+    sendScoreUpdate(score: number) {
+        this.socket.emit('scoreUpdate', {
+            clientId: this.clientId,
+            score: score
+        })
+    }
 }
