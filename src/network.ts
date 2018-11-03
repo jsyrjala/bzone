@@ -50,6 +50,7 @@ export class Network {
         })
 
         this.socket.on('tankState', (msg: any) => {
+
             // this.screen.updatePlayer(msg)
         })
     }

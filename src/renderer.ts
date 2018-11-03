@@ -68,9 +68,6 @@ export default class Renderer {
         const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 1), scene);
         light.intensity = 1;
 
-        // TODO
-        // this.createPlayers([])
-
         // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
         const ground = BABYLON.Mesh.CreateGround("ground1", 16, 16, 22, scene);
         const grass0 = new BABYLON.StandardMaterial("grass0", scene);
@@ -84,7 +81,6 @@ export default class Renderer {
             new BABYLON.Sound("explosion1", "assets/explosion1.wav", scene),
             new BABYLON.Sound("explosion2", "assets/explosion2.wav", scene)
         ];
-
     }
 
     createPlayers(players: any[]) {
@@ -222,7 +218,6 @@ export default class Renderer {
         this.counter ++
 
         if (this.tanks.length === 0) {
-
             return
         }
 
@@ -237,31 +232,9 @@ export default class Renderer {
                 this.network.sendState(player.tank)
 
                 this.moveProjectiles(player.tank, this.tanks)
+                this.network.sendState(player.tank)
             }
-
         })
-
-        /*
-                if (gamepadState()) {
-                    this.gamepadControl(this.tanks[0])
-                }
-
-
-                this.keyboardControl(this.tanks[0])
-
-                this.keyboardControl(this.tanks[1])
-
-                this.showCameraInfo()
-
-                this.tanks.forEach(tank => this.moveProjectiles(tank, this.tanks))
-
-                this.network.sendState(this.tanks[0])
-        */
-        /*
-        this.tanks.forEach((tank: any) => {
-            this.network.sendState(tank)
-        })
-        */
     }
 
     initialize(canvas: HTMLCanvasElement) {
@@ -276,7 +249,6 @@ export default class Renderer {
         engine.runRenderLoop(() => {
             this._scene.render();
         });
-
 
         window.addEventListener('resize', () => {
             engine.resize();
