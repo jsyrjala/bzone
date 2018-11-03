@@ -156,3 +156,7 @@ io.on('connection', (socket) => {
   })
 
 });
+
+io.on('error', (err) => {
+  console.log('GOT ERROR', err)
+})
