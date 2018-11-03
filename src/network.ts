@@ -53,9 +53,9 @@ export class Network {
             this.renderer.updatePlayer(msg)
         })
 
-        this.socket.on('projectile', (msg: any) => {
-            console.log('projectile', msg)
-            //this.renderer.createProjectile(msg)
+        this.socket.on('newProjectile', (msg: any) => {
+            console.log('new proj msg', msg)
+            this.renderer.makeProjectile(msg)
         })
     }
 
@@ -79,8 +79,8 @@ export class Network {
         })
     }
 
-    sendProjectile(projectile: any) {
-        this.socket.emit('projectile', {
+    sendNewProjectile(projectile: any) {
+        this.socket.emit('newProjectile', {
             clientId: this.clientId,
             body: {
                 position: projectile.mesh.position,

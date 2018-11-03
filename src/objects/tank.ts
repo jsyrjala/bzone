@@ -3,7 +3,8 @@ import Scene = BABYLON.Scene;
 import Material = BABYLON.Material;
 import {Color3} from 'babylonjs';
 import Vector3 = BABYLON.Vector3;
-import {createProjectile} from "./projectile";
+import {createProjectileFromTank} from "./projectile";
+import {Network} from "../network";
 
 
 const B = BABYLON
@@ -47,7 +48,7 @@ const createTurret = (scene: Scene, material: Material) => {
     return barrel
 }
 
-export const createTank = (name: string, scene: Scene, position: Vector3, color: Color3) => {
+export const createTank = (name: string, network: Network, scene: Scene, position: Vector3, color: Color3) => {
     const shootingSound = new BABYLON.Sound("50_cal", "assets/50_cal.wav", scene);
     const clickSound = new BABYLON.Sound("click", "assets/click.wav", scene);
     const tankMaterial = new BABYLON.StandardMaterial(name + 'tankMaterial', scene);
@@ -78,7 +79,7 @@ export const createTank = (name: string, scene: Scene, position: Vector3, color:
         turret: turret,
         barrel: barrel,
         color: color,
-        projectiles: [],
+        projectiles: ([] as any[]),
         score: 0,
         die: () => {
             tank.dead = true
@@ -95,15 +96,19 @@ export const createTank = (name: string, scene: Scene, position: Vector3, color:
             return false
         },
         shoot: () => {
+            console.log('many shoot')
             if (tank.canShoot()) {
-                const projectile = createProjectile(scene, tank)
-                tank.projectiles.push(projectile)
-                shootingSound.play()
+                const projectile = createProjectileFromTank(scene, tank)
+                tank.attachProjectile(projectile, true)
             } else {
                 clickSound.play()
             }
+        },
+        attachProjectile: (projectile: any, notifyOthers: boolean = false) => {
+            shootingSound.play()
+            tank.projectiles.push(projectile)
+            notifyOthers && network.sendNewProjectile(projectile)
         }
-
     }
 
     return tank

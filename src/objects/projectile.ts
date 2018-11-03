@@ -1,10 +1,17 @@
 import * as BABYLON from 'babylonjs';
 import Scene = BABYLON.Scene;
+import Color3 = BABYLON.Color3;
+import Vector3 = BABYLON.Vector3;
 
-export const createProjectile = (scene: Scene, tank: any) => {
+export const createProjectileFromTank = (scene: Scene, tank: any) => {
+    return createProjectileObject(scene, tank.color,
+        tank.body.position.clone(), tank.body.rotation.add(tank.turret.rotation))
+}
+
+export const createProjectileObject = (scene: Scene, color: Color3, position: Vector3, rotation: Vector3) => {
     const material = new BABYLON.StandardMaterial(name + 'projectileMaterial', scene);
-    material.diffuseColor = tank.color
-    material.ambientColor = tank.color
+    material.diffuseColor = color
+    material.ambientColor = color
 
     const head = BABYLON.Mesh.CreateCylinder('projectileHead', 0.3, 0, 0.15,
         12, 2, scene)
@@ -17,13 +24,13 @@ export const createProjectile = (scene: Scene, tank: any) => {
     projectile.material = material
 
     // TODO wrong starting position in some rotations, should be in ref to turret
-    projectile.position = tank.body.position.clone()
+    projectile.position = position
 
     // TODO should add tanks speed to bullet
     projectile.position.y = 0.9
     projectile.position.x += 0
 
-    projectile.rotation.y = tank.body.rotation.y + tank.turret.rotation.y
+    projectile.rotation.y = rotation.y
     projectile.rotation.z = Math.PI / 2
 
     // some sparks
@@ -36,7 +43,8 @@ export const createProjectile = (scene: Scene, tank: any) => {
     particleSystem.minLifeTime = 0.00;
     particleSystem.maxLifeTime = 0.5;
 
-    particleSystem.createPointEmitter(new BABYLON.Vector3(-1, 4, 2), new BABYLON.Vector3(1, 4, -2));
+    particleSystem.createPointEmitter(new BABYLON.Vector3(-1, 4, 2).negate(),
+        new BABYLON.Vector3(1, 4, -2).negate());
 
     particleSystem.emitRate = 500;
 
@@ -48,7 +56,7 @@ export const createProjectile = (scene: Scene, tank: any) => {
         created: Date.now(),
         dispose: () => {
             console.log('displosing projectile')
-            particleSystem.emitter = projectile.position.clone()
+            particleSystem.emitter = projectile.position
             particleSystem.stop();
             projectile.dispose()
             // show particles after projectile hits, so wait a while

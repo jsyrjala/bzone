@@ -122,8 +122,9 @@ io.on('connection', (socket) => {
     sendToOtherGameParticipants('tankState', msg)
   })
 
-  socket.on('projectile', msg => {
-    sendToOtherGameParticipants('projectile', msg)
+  socket.on('newProjectile', msg => {
+    console.log('newProjectile', msg)
+    sendToOtherGameParticipants('newProjectile', msg)
   })
 
 });

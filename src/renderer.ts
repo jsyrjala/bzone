@@ -1,11 +1,11 @@
 import * as BABYLON from 'babylonjs';
 import {gamepadState, AXES, initGamePad} from './gamepad';
 import {createTank} from './objects/tank';
-import {createProjectile} from './objects/projectile';
 import _ from 'lodash'
 import {getKeyboardState, initKeyboard} from "./keyboard";
 import {Network} from "./network";
 import {Screen} from './ui'
+import {createProjectileObject} from "./objects/projectile";
 
 const B = BABYLON
 
@@ -91,7 +91,7 @@ export default class Renderer {
             this.players.push(player)
             const position = new B.Vector3(counter ++, 0, 0)
             const tankColor = new BABYLON.Color3(player.color.r, player.color.g, player.color.b);
-            const tank = createTank('t' + counter, this._scene, position, tankColor)
+            const tank = createTank('t' + counter, this.network, this._scene, position, tankColor)
             this.tanks.push(tank)
             player.tank = tank
 
@@ -99,6 +99,19 @@ export default class Renderer {
                 initGamePad(tank)
                 initKeyboard([tank])
             }
+        })
+    }
+
+    makeProjectile(msg: any) {
+        this.players.forEach(player => {
+            if (msg.clientId !== player.clientId) {
+                return
+            }
+            console.log('create makeProj', msg)
+            const projectile = createProjectileObject(this._scene, player.tank.color,
+                msg.body.position, msg.body.rotation)
+
+            player.tank.attachProjectile(projectile)
         })
     }
 
@@ -229,15 +242,12 @@ export default class Renderer {
         }
 
         this.players.forEach((player: any) => {
-
+            this.moveProjectiles(player.tank, this.tanks)
             if (this.clientId === player.clientId) {
                 if (gamepadState()) {
                     this.gamepadControl(player.tank)
                 }
                 this.keyboardControl(player.tank)
-
-
-                this.moveProjectiles(player.tank, this.tanks)
                 this.network.sendState(player)
             }
         })
