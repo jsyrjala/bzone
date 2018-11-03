@@ -25,12 +25,16 @@ export class Network {
             })
         })
 
-
         this.socket.on('color', (msg: any) => {
             console.log('color', msg)
         })
+
         this.socket.on('errorMessage', (msg: any) => {
             console.log('errorMessage', msg)
+        })
+
+        this.socket.on('playerDisconnected', (msg: any) => {
+            console.log('player disconnected', msg)
         })
     }
 

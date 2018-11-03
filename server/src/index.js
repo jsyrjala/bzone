@@ -26,11 +26,11 @@ io.on('connection', (socket) => {
   console.log('User connected');
   socket.on('disconnect', (error) => {
     console.log('User disconnected', error);
-    // remove from players waiting
-    const client = playersWaiting.filter((client) => client.socket === socket)[0]
-    if (client) {
+    // remove from waiting list
+    const waitingClient = playersWaiting.filter((client) => client.socket === socket)[0]
+    if (waitingClient) {
       console.log('Removed player was in waiting list')
-      const index = playersWaiting.indexOf(client)
+      const index = playersWaiting.indexOf(waitingClient)
       playersWaiting.splice(index, 1);
       socket.emit('wait', {
         playersWaiting: playersWaiting.length,
@@ -38,6 +38,24 @@ io.on('connection', (socket) => {
       })
     } else {
       console.log('Disconnected player not in waiting list')
+    }
+
+    // remove from client list
+    const client = Object.values(clients).filter(client => client.socket === socket)[0]
+    if (client) {
+      delete clients[client.id]
+    }
+
+    const game = games[client.gameId]
+    if (game) {
+      game.clients.forEach(gameClient => {
+        if (gameClient.id === client.id) {
+          return
+        }
+        gameClient.socket.emit('playerDisconnected', {
+          player: client.player
+        })
+      })
     }
 
   });
@@ -50,6 +68,9 @@ io.on('connection', (socket) => {
     client.player.score = 0
     client.player.color = availableColors[Object.keys(playersWaiting).length]
     client.socket = socket
+    client.id = uuid()
+
+    clients[client.id] = client
 
     playersWaiting.push(client)
 
@@ -59,6 +80,8 @@ io.on('connection', (socket) => {
         id: uuid(),
         clients: playersWaiting
       }
+
+      game.clients.forEach(client => client.gameId = game.id)
       games[game.id] = game
       console.log('Start game', game.id)
 
@@ -79,5 +102,6 @@ io.on('connection', (socket) => {
 
   socket.on('tankState', msg => {
     // console.log('tankState', msg)
+    msg.clientId
   })
 });
