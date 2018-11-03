@@ -3,6 +3,7 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const uuid = require('uuid/v4')
+const path = require('path')
 
 const clients = {}
 const availableColors = [
@@ -16,7 +17,9 @@ const games = {}
 const maxGamePlayers = 2
 let playersWaiting = []
 
-app.use(express.static('../dist'))
+const distPath = path.join(__dirname, '../../dist')
+console.log('path', distPath)
+app.use(express.static(distPath))
 
 const PORT = process.env.PORT || 3000
 
