@@ -85,8 +85,10 @@ io.on('connection', (socket) => {
       games[game.id] = game
       console.log('Start game', game.id)
 
-      socket.emit('start', {
-        players: game.clients.map(client => client.player)
+      game.clients.filter(client => {
+        client.socket.emit('start', {
+          players: game.clients.map(client => client.player)
+        })
       })
 
       playersWaiting = []

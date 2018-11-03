@@ -20,10 +20,12 @@ export default class Renderer {
     private ricochetSound;
     private explosionSounds
     private tanks = []
-    private network;
+    private network: Network;
+    private screen: Screen;
 
-    constructor(network: Network) {
+    constructor(network: Network, screen: Screen) {
         this.network = network
+        this.screen = screen
     }
 
     createScene(canvas: HTMLCanvasElement, engine: BABYLON.Engine) {
@@ -192,7 +194,8 @@ export default class Renderer {
                 this.explosionSounds[1].play()
                 hitTank.die()
                 tank.score ++
-                document.querySelector(`#pl${tank.id}-score`).innerHTML = tank.score
+                // TODO update via screen
+                // document.querySelector(`#pl${tank.id}-score`).innerHTML = tank.score
             }
 
             if (hitTank || projectile.created < limit) {

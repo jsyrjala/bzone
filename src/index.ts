@@ -2,7 +2,7 @@ import Renderer from "./renderer";
 import {Network} from "./network";
 import uuidv4 from 'uuid/v4'
 import _ from 'lodash'
-
+import {Screen} from './ui'
 
 let playerName = _.shuffle([
     'Alpha',
@@ -40,11 +40,14 @@ if (m) {
 
 // mute
 const clientId = uuidv4()
+
 const url = 'http://localhost:3000'
+const screen = new Screen(clientId)
+
 const player = {
     name: playerName
 }
-const network = new Network(url, clientId, player)
+const network = new Network(url, clientId, player, screen)
 network.init()
-const renderer = new Renderer(network);
+const renderer = new Renderer(network, screen);
 renderer.initialize(document.getElementById('render-canvas') as HTMLCanvasElement);

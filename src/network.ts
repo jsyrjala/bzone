@@ -1,4 +1,5 @@
 import io from 'socket.io-client'
+import { Screen } from './ui'
 
 export class Network {
     private clientId;
@@ -6,11 +7,13 @@ export class Network {
     private url;
 
     private player;
+    private screen: Screen;
 
-    constructor(url: string, clientId: string, player: any) {
+    constructor(url: string, clientId: string, player: any, screen: Screen) {
         this.clientId = clientId
         this.url = url
         this.player = player
+        this.screen = screen
     }
 
     init() {
@@ -35,6 +38,22 @@ export class Network {
 
         this.socket.on('playerDisconnected', (msg: any) => {
             console.log('player disconnected', msg)
+        })
+
+        this.socket.on('start', (msg: any) => {
+            console.log('game starting', msg)
+            this.screen.updatePlayers(msg.players)
+            const elem = document.querySelector('#player-info')
+            const playerInfo = msg.players.map((player: any) => {
+                const color = `rgb(${player.color.r*255},${player.color.g*255},${player.color.b*255})`
+                if (player.id == this.clientId) {
+                    // this is me
+                    return `<div style="color: ${color}"><strong>${player.name}: ${player.score}</strong></div>`
+                }
+
+                return `<div style="color: ${color}">${player.name}: ${player.score}</div>`
+            }).join('')
+            elem.innerHTML = playerInfo
         })
     }
 
