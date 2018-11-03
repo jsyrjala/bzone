@@ -25,6 +25,8 @@ const keyDownHandler = (event: KeyboardEvent) => {
     STATE[event.code] = true
     if (observers[event.code]) {
         observers[event.code]()
+        event.preventDefault()
+        event.stopPropagation()
     }
 }
 
@@ -43,6 +45,10 @@ export const getKeyboardState = (tank: any) => {
 
 const keyUpHandler = (event: KeyboardEvent) => {
     STATE[event.code] = false
+    if (observers[event.code]) {
+        event.preventDefault()
+        event.stopPropagation()
+    }
 }
 
 const register = (tank: any, controlSet: any) => {
@@ -57,8 +63,8 @@ const register = (tank: any, controlSet: any) => {
 
 export const initKeyboard = (tanks: any[]) => {
     console.log('initKeyboard')
-    document.addEventListener('keydown', keyDownHandler, false);
-    document.addEventListener('keyup', keyUpHandler, false);
+    window.addEventListener('keydown', keyDownHandler, false)
+    window.addEventListener('keyup', keyUpHandler, false)
 
     for (let i = 0; i < tanks.length && i < controlSets.length; i ++) {
         register(tanks[i], controlSets[i])
