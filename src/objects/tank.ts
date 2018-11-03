@@ -48,7 +48,7 @@ const createTurret = (scene: Scene, material: Material) => {
     return barrel
 }
 
-export const createTank = (name: string, network: Network, scene: Scene, position: Vector3, color: Color3) => {
+export const createTank = (name: string, network: Network, scene: Scene, position: Vector3, rotation: Vector3, color: Color3) => {
     const shootingSound = new BABYLON.Sound("50_cal", "assets/50_cal.wav", scene);
     const clickSound = new BABYLON.Sound("click", "assets/click.wav", scene);
     const tankMaterial = new BABYLON.StandardMaterial(name + 'tankMaterial', scene);
@@ -64,6 +64,8 @@ export const createTank = (name: string, network: Network, scene: Scene, positio
     //const merged = BABYLON.Mesh.MergeMeshes([body, turret, barrel]);
     body.position.z = position.z
     body.position.x = position.x
+
+    body.rotation.y = rotation.y
 
     barrel.parent = turret
     turret.parent = body

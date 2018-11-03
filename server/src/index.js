@@ -89,7 +89,12 @@ io.on('connection', (socket) => {
       // randomize locations
       game.clients.filter(client => {
         client.socket.emit('start', {
-          players: game.clients.map(client => client.player)
+          players: game.clients.map(client => {
+            const player = client.player
+            player.position = {x: Math.random() * 16 - 8, y: 0, z: Math.random() * 16 - 8}
+            player.rotation = {x: 0, y: Math.random() * 2 * Math.PI, z: 0}
+            return player
+          })
         })
       })
 

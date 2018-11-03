@@ -89,9 +89,11 @@ export default class Renderer {
         let counter = 1
         players.forEach(player => {
             this.players.push(player)
-            const position = new B.Vector3(counter ++, 0, 0)
+            const pos = player.position
+            const position = new B.Vector3(pos.x, 0, pos.z)
+            const rotation = new B.Vector3(0, player.rotation.y, 0)
             const tankColor = new BABYLON.Color3(player.color.r, player.color.g, player.color.b);
-            const tank = createTank('t' + counter, this.network, this._scene, position, tankColor)
+            const tank = createTank('t' + counter, this.network, this._scene, position, rotation, tankColor)
             this.tanks.push(tank)
             player.tank = tank
 
