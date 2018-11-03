@@ -1,4 +1,5 @@
-const app = require('express')();
+const express = require('express')
+const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const uuid = require('uuid/v4')
@@ -15,9 +16,7 @@ const games = {}
 const maxGamePlayers = 2
 let playersWaiting = []
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
-});
+app.use(express.static('../dist'))
 
 const PORT = process.env.PORT || 3000
 

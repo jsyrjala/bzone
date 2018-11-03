@@ -19,13 +19,15 @@
     "parcel-bundler": "1.10.3",
     "socket.io-client": "2.1.1",
     "typescript": "3.1.5",
-    "ui": "^0.2.4",
     "uuid": "3.3.2"
   },
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build --public-url '.' index.html",
     "publish": "rsync -a dist/* --delete jsyrjala@lakka.kapsi.fi:public_html_jsyrjala/bzone",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copy-dist": "cd server ; npm install",
+    "start-server": "cd server; npm start",
+    "prod-server": "npm run build; npm run start-server"
   }
 }
